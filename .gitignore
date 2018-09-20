@@ -106,3 +106,4 @@ ENV/
 
 # mypy
 .mypy_cache/
+/model_data_anet
