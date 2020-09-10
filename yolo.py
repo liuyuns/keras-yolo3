@@ -31,7 +31,7 @@ class YOLO(object):
         "classes_path": 'anet-tiny/classes.txt',
         "score" : 0.3,
         "iou" : 0.45,
-        "model_image_size" : (1024, 768),
+        "model_image_size" : (800, 800),
         "gpu_num" : 1,
     }
 
@@ -110,7 +110,7 @@ class YOLO(object):
         return boxes, scores, classes
 
     def detect_image(self, image):
-        
+
         with graph.as_default():
             start = timer()
 
@@ -124,7 +124,7 @@ class YOLO(object):
                 boxed_image = letterbox_image(image, new_image_size)
             image_data = np.array(boxed_image, dtype='float32')
 
-            print(image_data.shape)
+            print(f"Image shape: {image_data.shape}, time so far: {timer()-start}")
             image_data /= 255.
             image_data = np.expand_dims(image_data, 0)  # Add batch dimension.
 
@@ -136,7 +136,7 @@ class YOLO(object):
                     K.learning_phase(): 0
                 })
 
-            print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
+            print('Found {} boxes for {}, time {}'.format(len(out_boxes), 'img', timer()-start))
 
             objects = []
             for i, c in reversed(list(enumerate(out_classes))):
@@ -151,7 +151,7 @@ class YOLO(object):
                 left = max(0, np.floor(left + 0.5).astype('int32'))
                 bottom = min(image.size[1], np.floor(bottom + 0.5).astype('int32'))
                 right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
-                print(label, (left, top), (right, bottom))
+                print(label, (left, top), (right, bottom), (right-left, bottom-top))
 
                 scoreAsNum = score.astype(score.dtype)
                 box = {"left":left, "top":top, "right":right, "bottom":bottom}
@@ -159,8 +159,11 @@ class YOLO(object):
                 objects.append(objectRecord)
 
             end = timer()
-            print(end - start)
+            print(f"Time used: {end - start}s")
             return objects
+
+    def show_rendered_result(self, img, objects):
+        pass
 
     def close_session(self):
         self.sess.close()

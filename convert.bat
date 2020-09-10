@@ -1,1 +1,5 @@
-python3 convert.py ..\anet\cfg\anet-tiny-default-anchor-test.cfg ..\anet\result\anet-tiny-default-anchor_1800.weights anet-tiny\anet.h5 
+@call python convert.py C:\dev\Phoenix\0___model\web\tiny-model\od_net.cfg  C:\dev\Phoenix\0___model\web\tiny-model\od_net_best.weights anet-tiny\anet.h5
+
+REM @call xcopy anet-tiny\anet.h? ..\POC\service\anet-tiny\ /y /i
+@call xcopy C:\dev\Phoenix\0___model\web\tiny-model\od_net.names anet-tiny\classes.txt /y /i
+

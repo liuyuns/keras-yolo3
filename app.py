@@ -26,7 +26,7 @@ _args = {
         "classes_path": 'anet-tiny/classes.txt',
         "score" : 0.3,
         "iou" : 0.45,
-        "model_image_size" : (1024, 768),
+        "model_image_size" : (800, 800),
         "gpu_num" : 1,
     }
 
@@ -37,7 +37,7 @@ def detect():
     global yoloInstance
     if yoloInstance == None:
         yoloInstance = YOLO()
-    
+
     jsonObj = request.get_json()
     if (jsonObj == None):
         return None, 500

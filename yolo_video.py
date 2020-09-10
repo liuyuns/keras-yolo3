@@ -1,9 +1,16 @@
 import sys
 import argparse
-from yolo import YOLO, detect_video
+from yolo import YOLO
+# , detect_video
 from PIL import Image
 
-def detect_img(yolo):
+def detect_img(yolo, img):
+    if img is not None:
+        image = Image.open(img)
+        objects = yolo.detect_image(image)
+        yolo.show_rendered_result(image, objects)
+        return
+
     while True:
         img = input('Input image filename:')
         try:
@@ -12,8 +19,8 @@ def detect_img(yolo):
             print('Open Error! Try again!')
             continue
         else:
-            r_image = yolo.detect_image(image)
-            r_image.show()
+            objects = yolo.detect_image(image)
+            yolo.show_rendered_result(image, objects)
     yolo.close_session()
 
 FLAGS = None
@@ -70,7 +77,7 @@ if __name__ == '__main__':
         print("Image detection mode")
         if "input" in FLAGS:
             print(" Ignoring remaining command line arguments: " + FLAGS.input + "," + FLAGS.output)
-        detect_img(YOLO(**vars(FLAGS)))
+        detect_img(YOLO(**vars(FLAGS)), FLAGS.input)
     elif "input" in FLAGS:
         detect_video(YOLO(**vars(FLAGS)), FLAGS.input, FLAGS.output)
     else:
